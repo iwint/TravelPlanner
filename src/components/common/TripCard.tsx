@@ -1,10 +1,15 @@
 import * as React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import {Avatar, Button, Card} from 'react-native-paper';
-import {theme} from '../../themes';
+import {StyleSheet, Text, View} from 'react-native';
+import {Card} from 'react-native-paper';
+import {Trip} from '../../store/reducer/tripSlice.type';
 
-const TripCard = () => (
-  <Card style={styles.container}>
+type Props = {
+  onPressCard: () => void;
+  item: Trip;
+};
+
+const TripCard = ({onPressCard, item}: Props) => (
+  <Card style={styles.container} onPress={onPressCard}>
     <Card.Cover
       style={{
         borderTopLeftRadius: 20,
@@ -12,25 +17,26 @@ const TripCard = () => (
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
       }}
-      source={{uri: 'https://picsum.photos/700'}}
+      source={{uri: item['cover_photo']}}
     />
     <Card.Actions
       style={{
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        gap: 5,
+        paddingHorizontal: 15,
         backgroundColor: '#fff',
         borderBottomEndRadius: 20,
         borderBottomStartRadius: 20,
+        gap: 5,
       }}>
       <View style={styles.subContainer}>
-        <Text style={styles.cardTitle}>New Year Trip</Text>
-        <Text style={styles.subTitle}>3 more days</Text>
+        <Text style={styles.cardTitle}>{item['trip_name']}</Text>
+        <Text style={styles.subTitle}>{item['trip_destination']}</Text>
       </View>
       <View style={styles.subContainer}>
-        <Text style={styles.subTitle}>New Year Trip</Text>
-        <Text style={styles.subTitle}>3 more days</Text>
+        <Text style={styles.subTitle}>{item['trip_destination']}</Text>
+        <Text style={styles.subTitle}>{item['trip_date']}</Text>
       </View>
     </Card.Actions>
   </Card>
@@ -56,7 +62,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     alignItems: 'center',
-    paddingVertical: 5,
   },
   subTitle: {
     fontWeight: '600',

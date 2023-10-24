@@ -3,7 +3,7 @@ import React from 'react';
 
 type InputProps = React.ComponentPropsWithRef<typeof TextInput> & {
   label: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
 };
 
 const Input = ({label, icon, ...props}: InputProps) => {
@@ -25,12 +25,13 @@ export default Input;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
+    gap: 10,
   },
   inputContainer: {
     borderRadius: 10,
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#EFEEEE',
+    borderColor: '#080E1E',
     margin: 5,
   },
   input: {

@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    zIndex: -4,
   },
   left: {
     display: 'flex',

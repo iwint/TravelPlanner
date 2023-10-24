@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   content: {
     position: 'absolute',
     bottom: 0,
-    minHeight: height - 400,
+    minHeight: 'auto',
     backgroundColor: '#fff',
     width: '100%',
     padding: 10,
