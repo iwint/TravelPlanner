@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, ToastAndroid, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import Header from '../components/common/Header';
@@ -10,6 +17,8 @@ import {addTrip, editTrip, updateTrip} from '../store/reducer/tripSlice';
 import {TripState} from '../store/reducer/tripSlice.type';
 
 type Props = StackScreenProps<any> & {};
+
+const {width, height} = Dimensions.get('window');
 
 const formData = [
   {
@@ -32,7 +41,7 @@ const formData = [
 const CreateNewTrip = (props: Props) => {
   const {trip, trips}: TripState = useSelector((state: any) => state.trip);
   console.log(trip);
-  const isEdit = props.route.params.edit;
+  const isEdit = props.route.params?.edit ? true : false;
   const dispatch = useDispatch();
 
   const updateTripDetails = (key: string, value: any) => {
@@ -72,7 +81,10 @@ const CreateNewTrip = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <Header title={'Plan a new trip'} onGoBack={() => {}} />
+      <Header
+        title={'Plan a new trip'}
+        onGoBack={() => props.navigation.goBack()}
+      />
       <ImagePicker
         value={trip.cover_photo ? trip.cover_photo : null}
         onChange={(val: any) => updateTripDetails('cover_photo', val)}
@@ -82,7 +94,7 @@ const CreateNewTrip = (props: Props) => {
           <Input
             label={field.label}
             key={index}
-            value={isEdit ? trip[field.name] : ''}
+            value={trip[field.name]}
             placeholder={field.placeholder}
             onChangeText={val => updateTripDetails(field.name, val)}
           />
@@ -102,7 +114,8 @@ export default CreateNewTrip;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'relative',
+    height: height,
   },
   formContainer: {
     padding: 15,
@@ -114,5 +127,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
+    position: 'absolute',
+    bottom: '2%',
   },
 });

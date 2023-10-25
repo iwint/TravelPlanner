@@ -100,6 +100,7 @@ const IndividualTrip = (props: Props) => {
           title="Add Expense"
         />
         <Header
+          onGoBack={() => props.navigation.goBack()}
           title="Trip Details"
           children={
             <Appbar.Action

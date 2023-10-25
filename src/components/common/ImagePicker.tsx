@@ -46,9 +46,9 @@ const ImagePicker = ({onChange, value}: Props) => {
           }}
         />
       ) : (
-        <Pressable style={styles.button}>
+        <View style={styles.button}>
           <PlusIcon />
-        </Pressable>
+        </View>
       )}
     </Pressable>
   );
