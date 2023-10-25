@@ -88,6 +88,7 @@ const IndividualTrip = (props: Props) => {
           title="Delete Trip"
         />
         <CustomDrawer
+          height={'50%'}
           isVisible={showExpenseModal}
           children={
             <AddExpense

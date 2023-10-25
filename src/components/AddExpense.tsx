@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 type Props = {
   handleExpenseModal: () => void;
   handleAddOrUpdateExpense: () => void;
-  isEdit: boolean;
+  isEdit?: boolean;
 };
 
 const formData = [
@@ -42,7 +42,7 @@ const AddExpense = ({
         backgroundColor: '#fff',
         height: 200,
         width: '100%',
-        gap: 10,
+        gap: 20,
       }}>
       <View>
         {formData.map((item, index) => (
@@ -55,16 +55,16 @@ const AddExpense = ({
           />
         ))}
       </View>
-      <View style={{flexDirection: 'row', width: '100%'}}>
+      <View style={{flexDirection: 'row', width: '100%', gap: 10}}>
         <Button
-          width={'50%'}
+          width={'48%'}
           children="Cancel"
           onPress={handleExpenseModal}
           backgroundColor={'#fff'}
           color={'#000'}
         />
         <Button
-          width={'50%'}
+          width={'48%'}
           backgroundColor={'#AFDF02'}
           children="Add"
           color={'#000'}

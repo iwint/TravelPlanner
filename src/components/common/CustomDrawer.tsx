@@ -5,12 +5,13 @@ const {width, height} = Dimensions.get('window');
 
 type CustomDrawerProps = React.ComponentPropsWithRef<typeof Modal> & {
   title: string;
+  height: number | string;
 };
 
-const CustomDrawer = ({title, ...props}: CustomDrawerProps) => {
+const CustomDrawer = ({title, height, ...props}: CustomDrawerProps) => {
   return (
     <Modal style={styles.container} {...props}>
-      <View style={styles.content}>
+      <View style={{height: height ? height : 'auto', ...styles.content}}>
         <Text style={styles.title}>{title}</Text>
         {props.children}
       </View>
@@ -29,7 +30,6 @@ const styles = StyleSheet.create({
   content: {
     position: 'absolute',
     bottom: 0,
-    minHeight: 'auto',
     backgroundColor: '#fff',
     width: '100%',
     padding: 10,
