@@ -7,6 +7,7 @@ import Header from '../components/common/Header';
 import TripCard from '../components/common/TripCard';
 import {TripState} from '../store/reducer/tripSlice.type';
 import {getTripById, resetTrip} from '../store/reducer/tripSlice';
+import Mapbox from '@rnmapbox/maps';
 
 type HomeScreenProps = StackScreenProps<any> & {};
 
@@ -25,6 +26,7 @@ const Home = (props: HomeScreenProps) => {
   return (
     <View style={styles.container}>
       <Header title={''} type={'welcome'} onGoBack={() => {}} />
+      <Mapbox.MapView style={{flex: 1}} />
       <Text style={styles.title}>My Trips</Text>
       <FlatList
         data={trips}

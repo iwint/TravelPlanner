@@ -2,7 +2,8 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Button from './common/Button';
 import Input from './common/Input';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {updateTripExpense} from '../store/reducer/tripSlice';
 
 type Props = {
   handleExpenseModal: () => void;
@@ -34,24 +35,25 @@ const AddExpense = ({
   isEdit,
 }: Props) => {
   const {expense} = useSelector((state: any) => state.trip);
-
-  const handleChange = () => {};
+  const dispatch = useDispatch();
+  const handleChange = (key: string, value: string | number) => {
+    dispatch(
+      updateTripExpense({
+        key: key,
+        value: value,
+      }),
+    );
+  };
   return (
-    <View
-      style={{
-        backgroundColor: '#fff',
-        height: 200,
-        width: '100%',
-        gap: 20,
-      }}>
-      <View>
+    <View style={styles.container}>
+      <View style={styles.formWrapper}>
         {formData.map((item, index) => (
           <Input
             label={item.label}
             placeholder={item.placeholder}
             key={index}
-            value={isEdit ? expense[item.name] : ''}
-            onChangeText={() => handleChange()}
+            value={expense[item.name]}
+            onChangeText={val => handleChange(item.name, val)}
           />
         ))}
       </View>
@@ -79,4 +81,15 @@ export default AddExpense;
 
 const styles = StyleSheet.create({
   title: {},
+  container: {
+    backgroundColor: '#fff',
+    minHeight: 200,
+    width: '100%',
+    gap: 20,
+  },
+  formWrapper: {
+    paddingHorizontal: 10,
+    alignItems: 'flex-start',
+    gap: 10,
+  },
 });

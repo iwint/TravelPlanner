@@ -26,13 +26,14 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     gap: 10,
+    alignItems: 'flex-start',
   },
   inputContainer: {
     borderRadius: 10,
     flexDirection: 'row',
     borderWidth: 1,
     borderColor: '#080E1E',
-    margin: 5,
+    marginVertical: 5,
   },
   input: {
     width: '100%',

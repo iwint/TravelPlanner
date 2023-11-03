@@ -1,18 +1,19 @@
+import {StackScreenProps} from '@react-navigation/stack';
+import React, {useState} from 'react';
 import {
   Dimensions,
-  Image,
+  KeyboardAvoidingView,
   StyleSheet,
-  Text,
   ToastAndroid,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {StackScreenProps} from '@react-navigation/stack';
+import {Calendar} from 'react-native-calendars';
+import {useDispatch, useSelector} from 'react-redux';
+import Button from '../components/common/Button';
+import CustomDrawer from '../components/common/CustomDrawer';
 import Header from '../components/common/Header';
 import ImagePicker from '../components/common/ImagePicker';
 import Input from '../components/common/Input';
-import Button from '../components/common/Button';
-import {useSelector, useDispatch} from 'react-redux';
 import {addTrip, editTrip, updateTrip} from '../store/reducer/tripSlice';
 import {TripState} from '../store/reducer/tripSlice.type';
 
@@ -42,8 +43,9 @@ const CreateNewTrip = (props: Props) => {
   const {trip, trips}: TripState = useSelector((state: any) => state.trip);
   console.log(trip);
   const isEdit = props.route.params?.edit ? true : false;
+  const [showModal, setShowModal] = useState(null);
   const dispatch = useDispatch();
-
+  const [markedDates, setMarkedDates] = useState<any>();
   const updateTripDetails = (key: string, value: any) => {
     dispatch(
       updateTrip({
@@ -78,6 +80,27 @@ const CreateNewTrip = (props: Props) => {
       }
     });
   };
+  const handleMarkedDates = (date: any) => {
+    setMarkedDates({
+      ...markedDates,
+      [date.dateString]: {
+        selected: true,
+        disableTouchEvent: true,
+        selectedDotColor: 'orange',
+      },
+    });
+  };
+  const handleConfirmDate = () => {
+    let date =
+      Object.keys(markedDates)[0] +
+      ' to ' +
+      Object.keys(markedDates)[Object.keys(markedDates).length - 1];
+    updateTripDetails('trip_date', date);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(null);
+  };
 
   return (
     <View style={styles.container}>
@@ -89,9 +112,45 @@ const CreateNewTrip = (props: Props) => {
         value={trip.cover_photo ? trip.cover_photo : null}
         onChange={(val: any) => updateTripDetails('cover_photo', val)}
       />
-      <View style={styles.formContainer}>
+      <CustomDrawer
+        title={'Select date'}
+        onBackButtonPress={handleCloseModal}
+        onBackdropPress={handleCloseModal}
+        isVisible={showModal === 'trip_date' && showModal !== null}
+        children={
+          <View style={styles.calenderContainer}>
+            <Calendar
+              style={{
+                width: '100%',
+              }}
+              markingType="dot"
+              onDayPress={val => handleMarkedDates(val)}
+              markedDates={{
+                ...markedDates,
+              }}
+            />
+            <View style={{flexDirection: 'row', width: '100%'}}>
+              <Button
+                width={'50%'}
+                children="Cancel"
+                onPress={() => setShowModal(null)}
+                backgroundColor={'#fff'}
+                color={'#000'}
+              />
+              <Button
+                width={'50%'}
+                backgroundColor={'#080E1E'}
+                children="Confirm"
+                onPress={handleConfirmDate}
+              />
+            </View>
+          </View>
+        }
+      />
+      <KeyboardAvoidingView style={styles.formContainer}>
         {formData?.map((field, index) => (
           <Input
+            onPressIn={() => setShowModal(field.name)}
             label={field.label}
             key={index}
             value={trip[field.name]}
@@ -99,7 +158,7 @@ const CreateNewTrip = (props: Props) => {
             onChangeText={val => updateTripDetails(field.name, val)}
           />
         ))}
-      </View>
+      </KeyboardAvoidingView>
       <View style={styles.buttonWrapper}>
         <Button
           children={isEdit ? 'Update' : "Let's Start your Plan"}
@@ -115,7 +174,7 @@ export default CreateNewTrip;
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    height: height,
+    flex: 1,
   },
   formContainer: {
     padding: 15,
@@ -129,5 +188,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     position: 'absolute',
     bottom: '2%',
+  },
+  calenderContainer: {
+    height: '100%',
   },
 });

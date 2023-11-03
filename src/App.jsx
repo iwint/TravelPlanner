@@ -1,17 +1,22 @@
-import React from 'react';
-import {StyleSheet} from 'react-native';
+import Mapbox from '@rnmapbox/maps';
+import React, {useEffect} from 'react';
 import {PaperProvider} from 'react-native-paper';
-import Navigations from './navigations';
-import {theme} from './themes';
+import {Provider} from 'react-redux';
 import {persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react';
-import {Provider} from 'react-redux';
+import Navigations from './navigations';
 import store from './store/store';
-import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import {theme} from './themes';
+import {MAP_BOX_API} from '../secrets';
 
 let persistor = persistStore(store);
 
 const App = () => {
+  Mapbox.setAccessToken(MAP_BOX_API);
+  Mapbox.setConnected(true);
+  useEffect(() => {
+    Mapbox.setTelemetryEnabled(false);
+  });
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

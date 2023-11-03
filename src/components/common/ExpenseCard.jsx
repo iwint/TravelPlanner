@@ -1,26 +1,30 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Pressable, Text, View} from 'react-native';
 import React from 'react';
 import {Avatar} from 'react-native-paper';
+import {getLabelFromString} from '../../utils/getLabelFromString';
 
-const ExpenseCard = ({data}) => {
+const ExpenseCard = ({data, onPress, onLongPress}) => {
   return (
-    <View style={styles.container}>
+    <Pressable
+      onLongPress={onLongPress}
+      onPress={onPress}
+      style={styles.container}>
       <View style={styles.left}>
         <Avatar.Text
           size={60}
-          label="XD"
+          label={getLabelFromString(data?.trip_expense_name)}
           style={{
             backgroundColor: '#EFEEEE',
           }}
           color="#64646E"
         />
         <View style={styles.leftText}>
-          <Text style={styles.title}>ExpenseCard</Text>
-          <Text style={styles.subtitle}>ExpenseCard</Text>
+          <Text style={styles.title}>{data?.trip_expense_name}</Text>
+          <Text style={styles.subtitle}>{data?.trip_expense_date}</Text>
         </View>
       </View>
-      <Text style={styles.right}>80</Text>
-    </View>
+      <Text style={styles.right}>₹ {data?.trip_expense_amount}</Text>
+    </Pressable>
   );
 };
 

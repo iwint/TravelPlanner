@@ -71,7 +71,8 @@ const tripSlice = createSlice({
       };
     },
     addOrUpdateTripExpense: (state, action) => {
-      const {trip_id, trip_expense} = action.payload;
+      const {trip_id} = action.payload;
+      const trip_expense = state.expense;
       const index = state.trips.findIndex(i => i.trip_id === trip_id);
       if (index !== -1) {
         const trip = state.trips[index];
@@ -102,6 +103,8 @@ export const {
   editTrip,
   getTripById,
   resetTrip,
+  updateTripExpense,
+  addOrUpdateTripExpense,
 } = tripSlice.actions;
 export const getTrip = state => state.Trip.trip;
 export const getTrips = state => state.Trip.trips;

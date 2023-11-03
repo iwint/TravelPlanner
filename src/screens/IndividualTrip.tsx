@@ -1,27 +1,25 @@
+import {StackScreenProps} from '@react-navigation/stack';
+import React, {useState} from 'react';
 import {
   Dimensions,
   FlatList,
   Image,
-  Pressable,
   StyleSheet,
   Text,
   ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import Header from '../components/common/Header';
-import ExpenseCard from '../components/common/ExpenseCard';
-import Button from '../components/common/Button';
 import {Appbar} from 'react-native-paper';
-import DeleteIcon from '../icons/DeleteIcon';
-import CustomDrawer from '../components/common/CustomDrawer';
-import {StackScreenProps} from '@react-navigation/stack';
-import {useSelector, useDispatch} from 'react-redux';
-import {navigateTo} from '../utils/navigateToScreen';
-import {deleteTrip} from '../store/reducer/tripSlice';
+import {useDispatch, useSelector} from 'react-redux';
 import AddExpense from '../components/AddExpense';
-
+import Button from '../components/common/Button';
+import CustomDrawer from '../components/common/CustomDrawer';
+import ExpenseCard from '../components/common/ExpenseCard';
+import Header from '../components/common/Header';
+import DeleteIcon from '../icons/DeleteIcon';
+import {addOrUpdateTripExpense, deleteTrip} from '../store/reducer/tripSlice';
+import {navigateTo} from '../utils/navigateToScreen';
 const {width, height} = Dimensions.get('window');
 
 type Props = StackScreenProps<any> & {};
@@ -48,7 +46,24 @@ const IndividualTrip = (props: Props) => {
     });
   };
 
-  const handleAddOrUpdateExpense = () => {};
+  const handleAddOrUpdateExpense = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        const result = dispatch(
+          addOrUpdateTripExpense({
+            trip_id: trip?.trip_id,
+          }),
+        );
+        console.log(result);
+        ToastAndroid.show('Expense added successfully', ToastAndroid.SHORT);
+        resolve(true);
+      } catch (err) {
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+        reject(err);
+      }
+      handleExpenseModal();
+    });
+  };
 
   return (
     <>
@@ -88,7 +103,7 @@ const IndividualTrip = (props: Props) => {
           title="Delete Trip"
         />
         <CustomDrawer
-          height={'50%'}
+          height={height}
           isVisible={showExpenseModal}
           children={
             <AddExpense
@@ -116,6 +131,7 @@ const IndividualTrip = (props: Props) => {
             uri: trip?.cover_photo,
           }}
         />
+
         <View style={styles.middle}>
           <Text style={styles.title}>Expenses</Text>
           <TouchableOpacity
@@ -134,9 +150,9 @@ const IndividualTrip = (props: Props) => {
         </View>
         <FlatList
           style={{paddingHorizontal: 5}}
-          data={[1, 2, 3, 6, 7, 8, 9]}
+          data={trip.trip_expenses}
           renderItem={({item, index}: any) => {
-            return <ExpenseCard data={item} />;
+            return <ExpenseCard key={index} data={item} />;
           }}
         />
         <View style={styles.buttonWrapper}>

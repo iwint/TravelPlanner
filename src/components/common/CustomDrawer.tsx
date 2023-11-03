@@ -1,7 +1,7 @@
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Modal from 'react-native-modal';
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 type CustomDrawerProps = React.ComponentPropsWithRef<typeof Modal> & {
   title: string;
@@ -11,7 +11,7 @@ type CustomDrawerProps = React.ComponentPropsWithRef<typeof Modal> & {
 const CustomDrawer = ({title, height, ...props}: CustomDrawerProps) => {
   return (
     <Modal style={styles.container} {...props}>
-      <View style={{height: height ? height : 'auto', ...styles.content}}>
+      <View style={{...styles.content}}>
         <Text style={styles.title}>{title}</Text>
         {props.children}
       </View>
