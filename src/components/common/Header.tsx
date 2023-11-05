@@ -35,9 +35,8 @@ const Header = ({title, onGoBack, type, children}: Props) => {
         }}
         mode="center-aligned">
         <Appbar.Action
-          onPress={onGoBack}
           icon={() => (
-            <Pressable style={styles.iconWrapper}>
+            <Pressable onPress={onGoBack} style={styles.iconWrapper}>
               <LeftArrow />
             </Pressable>
           )}

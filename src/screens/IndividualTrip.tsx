@@ -18,8 +18,14 @@ import CustomDrawer from '../components/common/CustomDrawer';
 import ExpenseCard from '../components/common/ExpenseCard';
 import Header from '../components/common/Header';
 import DeleteIcon from '../icons/DeleteIcon';
-import {addOrUpdateTripExpense, deleteTrip} from '../store/reducer/tripSlice';
+import {
+  addOrUpdateTripExpense,
+  deleteExpense,
+  deleteTrip,
+  resetExpense,
+} from '../store/reducer/tripSlice';
 import {navigateTo} from '../utils/navigateToScreen';
+import NoItemsComponent from '../components/NoItemsComponent';
 const {width, height} = Dimensions.get('window');
 
 type Props = StackScreenProps<any> & {};
@@ -27,8 +33,11 @@ type Props = StackScreenProps<any> & {};
 const IndividualTrip = (props: Props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [showDeleteExpenseModal, setShowDeleteExpenseModal] = useState(false);
+  const [expense, setExpense] = useState('');
   const handleDeleteModal = () => setShowDeleteModal(p => !p);
   const handleExpenseModal = () => setShowExpenseModal(p => !p);
+  const handleDeleteExpenseModal = () => setShowDeleteExpenseModal(p => !p);
   const {trip} = useSelector((state: any) => state.trip);
   const dispatch = useDispatch();
 
@@ -56,6 +65,7 @@ const IndividualTrip = (props: Props) => {
         );
         console.log(result);
         ToastAndroid.show('Expense added successfully', ToastAndroid.SHORT);
+        dispatch(resetExpense());
         resolve(true);
       } catch (err) {
         ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
@@ -65,6 +75,19 @@ const IndividualTrip = (props: Props) => {
     });
   };
 
+  const handleDeleteExpense = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        dispatch(deleteExpense({expense: expense}));
+        ToastAndroid.show('Expense deleted succussfully', ToastAndroid.SHORT);
+        resolve(true);
+      } catch (error) {
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+        reject();
+      }
+      handleDeleteExpenseModal();
+    });
+  };
   return (
     <>
       <View style={styles.container}>
@@ -103,6 +126,40 @@ const IndividualTrip = (props: Props) => {
           title="Delete Trip"
         />
         <CustomDrawer
+          isVisible={showDeleteExpenseModal}
+          children={
+            <View
+              style={{
+                backgroundColor: '#fff',
+                height: 200,
+                width: '100%',
+                gap: 10,
+              }}>
+              <Text style={styles.title}>
+                Are you sure you want to delete this expense?
+              </Text>
+              <View style={{flexDirection: 'row', width: '100%'}}>
+                <Button
+                  width={'50%'}
+                  children="Cancel"
+                  onPress={handleDeleteExpenseModal}
+                  backgroundColor={'#fff'}
+                  color={'#000'}
+                />
+                <Button
+                  width={'50%'}
+                  backgroundColor={'#F44336'}
+                  children="Delete"
+                  onPress={handleDeleteExpense}
+                />
+              </View>
+            </View>
+          }
+          onBackdropPress={handleDeleteModal}
+          animationIn={'bounceIn'}
+          title="Delete Trip"
+        />
+        <CustomDrawer
           height={height}
           isVisible={showExpenseModal}
           children={
@@ -131,7 +188,6 @@ const IndividualTrip = (props: Props) => {
             uri: trip?.cover_photo,
           }}
         />
-
         <View style={styles.middle}>
           <Text style={styles.title}>Expenses</Text>
           <TouchableOpacity
@@ -150,9 +206,23 @@ const IndividualTrip = (props: Props) => {
         </View>
         <FlatList
           style={{paddingHorizontal: 5}}
+          ListEmptyComponent={() => (
+            <NoItemsComponent
+              title={`No expenses found ${'\n'}Add new expense`}
+            />
+          )}
           data={trip.trip_expenses}
           renderItem={({item, index}: any) => {
-            return <ExpenseCard key={index} data={item} />;
+            return (
+              <ExpenseCard
+                onLongPress={() => {
+                  setExpense(item);
+                  handleDeleteExpenseModal();
+                }}
+                key={index}
+                data={item}
+              />
+            );
           }}
         />
         <View style={styles.buttonWrapper}>

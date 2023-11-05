@@ -92,6 +92,27 @@ const tripSlice = createSlice({
         state.trips.splice(index, 1, trip);
       }
     },
+    deleteExpense: (state, action) => {
+      const {expense} = action.payload;
+      const index = state.trip.trip_expenses.findIndex(
+        i => i.trip_expense_id === expense.trip_expense_id,
+      );
+      console.log('Index: ', index);
+      if (index === -1) return;
+      state.trip.trip_expenses.splice(index, 1);
+      const trip = {
+        ...state.trip,
+      };
+      const tripIndex = state.trips.findIndex(i => i.trip_id === trip.trip_id);
+      state.trips.splice(tripIndex, 1, trip);
+    },
+    resetExpense: state => {
+      state.expense = {
+        trip_expense_name: '',
+        trip_expense_amount: '',
+        trip_expense_date: '',
+      };
+    },
   },
 });
 
@@ -105,6 +126,8 @@ export const {
   resetTrip,
   updateTripExpense,
   addOrUpdateTripExpense,
+  deleteExpense,
+  resetExpense,
 } = tripSlice.actions;
 export const getTrip = state => state.Trip.trip;
 export const getTrips = state => state.Trip.trips;

@@ -8,6 +8,7 @@ import TripCard from '../components/common/TripCard';
 import {TripState} from '../store/reducer/tripSlice.type';
 import {getTripById, resetTrip} from '../store/reducer/tripSlice';
 import Mapbox from '@rnmapbox/maps';
+import NoItemsComponent from '../components/NoItemsComponent';
 
 type HomeScreenProps = StackScreenProps<any> & {};
 
@@ -25,24 +26,13 @@ const Home = (props: HomeScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <Header title={''} type={'welcome'} onGoBack={() => {}} />
-      <Mapbox.MapView style={{flex: 1}} />
+      <Header title={''} type={'welcome'} />
       <Text style={styles.title}>My Trips</Text>
       <FlatList
         data={trips}
-        ListEmptyComponent={() => {
-          return (
-            <Text
-              style={{
-                textAlign: 'center',
-                lineHeight: 35,
-                marginTop: '70%',
-                ...styles.title,
-              }}>
-              No trips found{'\n'}Create a new trip
-            </Text>
-          );
-        }}
+        ListEmptyComponent={() => (
+          <NoItemsComponent title={`No trips found ${'\n'}Create a new trip`} />
+        )}
         renderItem={({item, index}: any) => {
           console.log(item);
           return (

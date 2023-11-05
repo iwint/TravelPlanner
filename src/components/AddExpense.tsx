@@ -67,9 +67,9 @@ const AddExpense = ({
         />
         <Button
           width={'48%'}
-          backgroundColor={'#AFDF02'}
+          backgroundColor={'#000'}
           children="Add"
-          color={'#000'}
+          color={'#fff'}
           onPress={handleAddOrUpdateExpense}
         />
       </View>
